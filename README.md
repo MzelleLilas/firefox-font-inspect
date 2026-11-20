@@ -1,28 +1,28 @@
 # Font Inspect
 
-Extension Firefox pour inspecter la police d'un texte au clic.
+Firefox extension to inspect the font of any text with a click.
 
-## Utilisation
+## Usage
 
-1. Cliquer sur l'icône **Font Inspect** dans la barre d'outils (ou `Alt+Shift+F`).
-2. Survoler la page : l'élément sous le curseur est surligné.
-3. Cliquer sur un texte : un panneau affiche
+1. Click the **Font Inspect** icon in the toolbar (or press `Alt+Shift+F`).
+2. Hover over the page: the element under the cursor is highlighted.
+3. Click on some text: a panel shows
    - `font-family`
-   - `font-size` (px + équivalent rem)
-   - `font-weight` (valeur + nom : Regular, Bold…)
-   - `line-height` (px + ratio sans unité)
-   - `letter-spacing` (px + équivalent em)
-   - `color` : valeur telle que définie dans le CSS (hexa, rgba, hsl, oklch, var()…), règle d'origine, valeur résolue des `var()`, et conversion **hexa** systématique (`#rrggbbaa` si transparence)
-4. Cliquer sur une valeur pour la copier.
-5. `Échap` ou nouveau clic sur l'icône pour quitter.
+   - `font-size` (px + rem equivalent)
+   - `font-weight` (value + name: Regular, Bold…)
+   - `line-height` (px + unitless ratio)
+   - `letter-spacing` (px + em equivalent)
+   - `color`: the value as authored in the CSS (hex, rgba, hsl, oklch, var()…), the rule it comes from, the resolved `var()` value, and always a **hex** conversion (`#rrggbbaa` when transparent)
+4. Click a value to copy it.
+5. Press `Esc` or click the icon again to exit.
 
-## Installation en développement
+## Development install
 
-1. Ouvrir `about:debugging#/runtime/this-firefox`
-2. **Charger un module complémentaire temporaire…**
-3. Sélectionner `manifest.json`
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on…**
+3. Select `manifest.json`
 
-Ou avec [web-ext](https://github.com/mozilla/web-ext) :
+Or with [web-ext](https://github.com/mozilla/web-ext):
 
 ```bash
 npx web-ext run
@@ -31,7 +31,7 @@ npx web-ext run
 ## Structure
 
 - `manifest.json` — Manifest V3
-- `background.js` — injecte le script au clic sur l'icône, gère le badge « ON »
-- `content.js` — surbrillance, capture du clic, panneau (Shadow DOM isolé du CSS de la page)
+- `background.js` — injects the script when the icon is clicked, manages the "ON" badge
+- `content.js` — highlighting, click capture, info panel (Shadow DOM, isolated from the page's CSS)
 - `icons/icon.svg`
-- `test/colors.html` — page de test des différents formats de couleur
+- `test/colors.html` — test page covering the different color formats
