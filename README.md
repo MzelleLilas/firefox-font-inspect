@@ -35,3 +35,7 @@ npx web-ext run
 - `content.js` — highlighting, click capture, info panel (Shadow DOM, isolated from the page's CSS)
 - `icons/icon.svg`
 - `test/colors.html` — test page covering the different color formats
+
+## License
+
+[MIT](LICENSE)
