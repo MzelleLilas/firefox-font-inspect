@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Font Inspect — test couleurs</title>
+<style>
+  :root { --brand: oklch(0.62 0.21 285); --alias: var(--brand); }
+  body { font: 18px/1.5 system-ui, sans-serif; color: #333; padding: 2rem; }
+  .hex { color: #e63946; }
+  .hex-short { color: #0a0; }
+  .named { color: rebeccapurple; }
+  .rgba { color: rgba(29, 53, 87, 0.6); }
+  .hsl { color: hsl(200 80% 40%); }
+  .oklch { color: oklch(0.7 0.15 150); }
+  .oklch-alpha { color: oklch(0.7 0.15 150 / 50%); }
+  .p3 { color: color(display-p3 1 0.2 0.3); }
+  .var { color: var(--brand); }
+  .var-chain { color: var(--alias); }
+  .var-fallback { color: var(--missing, #ff9f1c); }
+  .mix { color: color-mix(in oklch, #e63946 40%, #1d3557); }
+  #ident.spec { color: teal; }
+  .spec { color: crimson; }
+  .important { color: orange !important; }
+  @media (min-width: 1px) { .media { color: #8338ec; } }
+</style>
+</head>
+<body>
+  <p class="hex">Hexa #e63946</p>
+  <p class="hex-short">Hexa court #0a0</p>
+  <p class="named">Nom : rebeccapurple</p>
+  <p class="rgba">rgba(29, 53, 87, 0.6)</p>
+  <p class="hsl">hsl(200 80% 40%)</p>
+  <p class="oklch">oklch(0.7 0.15 150)</p>
+  <p class="oklch-alpha">oklch(0.7 0.15 150 / 50%)</p>
+  <p class="p3">color(display-p3 1 0.2 0.3) — hors gamut sRGB</p>
+  <p class="var">var(--brand)</p>
+  <p class="var-chain">var(--alias) → var(--brand)</p>
+  <p class="var-fallback">var(--missing, #ff9f1c)</p>
+  <p class="mix">color-mix(in oklch, …)</p>
+  <p id="ident" class="spec">Spécificité : #ident.spec gagne (teal)</p>
+  <p class="important" style="color: blue">!important gagne sur l'inline (orange)</p>
+  <p style="color: #2a9d8f">Style inline</p>
+  <p class="media">Dans un @media</p>
+  <p class="hex">Parent hexa <strong>&lt;strong&gt; hérité</strong></p>
+  <p>Hérité de body (#333)</p>
+</body>
+</html>
