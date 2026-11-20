@@ -33,6 +33,7 @@ npx web-ext run
 - `manifest.json` — Manifest V3
 - `background.js` — injects the script when the icon is clicked, manages the "ON" badge
 - `content.js` — highlighting, click capture, info panel (Shadow DOM, isolated from the page's CSS)
+- `_locales/` — UI strings: English (default) and French. To add a language, copy `_locales/en/messages.json` to `_locales/<lang>/messages.json` and translate the `message` values
 - `icons/icon.svg`
 - `test/colors.html` — test page covering the different color formats
 

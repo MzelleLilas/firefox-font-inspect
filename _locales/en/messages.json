@@ -1,0 +1,49 @@
+{
+  "extDescription": {
+    "message": "Click any text to inspect its font: family, size, weight, line height, letter spacing and color.",
+    "description": "Add-on description shown in the add-ons manager and on AMO."
+  },
+  "actionTitle": {
+    "message": "Font Inspect — start inspecting",
+    "description": "Tooltip of the toolbar button."
+  },
+  "commandToggle": {
+    "message": "Toggle font inspection",
+    "description": "Description of the keyboard shortcut."
+  },
+  "copyHint": {
+    "message": "Click to copy",
+    "description": "Tooltip on a value in the panel."
+  },
+  "close": {
+    "message": "Close",
+    "description": "Tooltip of the panel close button."
+  },
+  "footerHint": {
+    "message": "Esc to exit · click a value to copy",
+    "description": "Hint at the bottom of the panel."
+  },
+  "computedLabel": {
+    "message": "→ computed",
+    "description": "Label of the row showing the browser-computed color (for color-mix(), light-dark()…)."
+  },
+  "colorSourceInline": {
+    "message": "inline style",
+    "description": "Color comes from the element's style attribute."
+  },
+  "colorInheritedFrom": {
+    "message": "inherited from $ELEMENT$",
+    "description": "Color is inherited from an ancestor element.",
+    "placeholders": {
+      "element": { "content": "$1", "example": "body" }
+    }
+  },
+  "colorSourceDefault": {
+    "message": "browser default value",
+    "description": "No CSS rule sets the color."
+  },
+  "colorSourceBlocked": {
+    "message": "computed value (external stylesheets not readable)",
+    "description": "The declaring rule could not be found because some cross-origin stylesheets cannot be read."
+  }
+}

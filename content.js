@@ -5,6 +5,8 @@
     return;
   }
 
+  const t = (key, ...subs) => browser.i18n.getMessage(key, subs);
+
   const WEIGHT_NAMES = {
     100: "Thin",
     200: "Extra Light",
@@ -414,12 +416,10 @@
 
     let source;
     if (!decl) {
-      source = blocked
-        ? "valeur calculée (feuilles de style externes non lisibles)"
-        : "valeur par défaut du navigateur";
+      source = blocked ? t("colorSourceBlocked") : t("colorSourceDefault");
     } else {
-      const where = decl.inline ? "style inline" : shorten(decl.selector);
-      source = inherited ? `hérité de ${describe(element)} · ${where}` : where;
+      const where = decl.inline ? t("colorSourceInline") : shorten(decl.selector);
+      source = inherited ? `${t("colorInheritedFrom", describe(element))} · ${where}` : where;
     }
 
     const resolved = decl && authored.includes("var(") ? resolveVars(authored, element) : null;
@@ -493,7 +493,7 @@
     const dt = document.createElement("dt");
     dt.textContent = label;
     const dd = document.createElement("dd");
-    dd.title = "Cliquer pour copier";
+    dd.title = t("copyHint");
     if (swatch) {
       const chip = document.createElement("span");
       chip.className = "swatch";
@@ -540,7 +540,7 @@
     const close = document.createElement("button");
     close.className = "close";
     close.textContent = "×";
-    close.title = "Fermer";
+    close.title = t("close");
     close.addEventListener("click", () => panel.remove());
     header.append(tag, close);
 
@@ -564,11 +564,11 @@
       ...row("color", info.color.authored, null, { swatch: info.color.swatch, note: info.color.source }),
     );
     if (info.color.resolved) dl.append(...row("→ var", info.color.resolved));
-    if (info.color.computed) dl.append(...row("→ calculée", info.color.computed));
+    if (info.color.computed) dl.append(...row(t("computedLabel"), info.color.computed));
     dl.append(...row("hex", info.color.hex, null, { swatch: info.color.swatch }));
 
     const footer = document.createElement("footer");
-    footer.textContent = "Échap pour quitter · clic sur une valeur pour copier";
+    footer.textContent = t("footerHint");
 
     panel.append(header, preview, dl, footer);
     shadow.appendChild(panel);

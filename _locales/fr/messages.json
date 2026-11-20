@@ -1,0 +1,38 @@
+{
+  "extDescription": {
+    "message": "Cliquez sur un texte pour inspecter sa police : famille, taille, graisse, interlignage, interlettrage et couleur."
+  },
+  "actionTitle": {
+    "message": "Font Inspect — activer l'inspection"
+  },
+  "commandToggle": {
+    "message": "Activer / désactiver l'inspection de police"
+  },
+  "copyHint": {
+    "message": "Cliquer pour copier"
+  },
+  "close": {
+    "message": "Fermer"
+  },
+  "footerHint": {
+    "message": "Échap pour quitter · clic sur une valeur pour copier"
+  },
+  "computedLabel": {
+    "message": "→ calculée"
+  },
+  "colorSourceInline": {
+    "message": "style inline"
+  },
+  "colorInheritedFrom": {
+    "message": "hérité de $ELEMENT$",
+    "placeholders": {
+      "element": { "content": "$1", "example": "body" }
+    }
+  },
+  "colorSourceDefault": {
+    "message": "valeur par défaut du navigateur"
+  },
+  "colorSourceBlocked": {
+    "message": "valeur calculée (feuilles de style externes non lisibles)"
+  }
+}

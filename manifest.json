@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Font Inspect",
-  "version": "0.1.0",
-  "description": "Cliquez sur un texte pour inspecter sa police : famille, taille, graisse, interlignage, interlettrage.",
+  "version": "0.2.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "icons": {
     "48": "icons/icon.svg",
     "96": "icons/icon.svg"
   },
   "action": {
-    "default_title": "Font Inspect — activer l'inspection",
+    "default_title": "__MSG_actionTitle__",
     "default_icon": "icons/icon.svg"
   },
   "permissions": ["activeTab", "scripting"],
@@ -18,7 +19,7 @@
   "commands": {
     "_execute_action": {
       "suggested_key": { "default": "Alt+Shift+F" },
-      "description": "Activer / désactiver l'inspection de police"
+      "description": "__MSG_commandToggle__"
     }
   },
   "browser_specific_settings": {

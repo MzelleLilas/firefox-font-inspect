@@ -8,7 +8,7 @@ browser.action.onClicked.addListener(async (tab) => {
     });
   } catch (err) {
     // Pages protégées (about:, addons.mozilla.org, PDF viewer…)
-    console.warn("[Font Inspect] Injection impossible :", err);
+    console.warn("[Font Inspect] Cannot inject script:", err);
   }
 });
 
