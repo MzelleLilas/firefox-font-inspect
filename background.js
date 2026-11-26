@@ -12,8 +12,14 @@ browser.action.onClicked.addListener(async (tab) => {
   }
 });
 
-// Le content script signale son état pour afficher un badge sur l'icône.
 browser.runtime.onMessage.addListener((msg, sender) => {
+  // Bouton ⚙ du panneau : ouvre la page d'options.
+  if (msg?.type === "font-inspect:open-options") {
+    browser.runtime.openOptionsPage();
+    return;
+  }
+
+  // Le content script signale son état pour afficher un badge sur l'icône.
   if (msg?.type !== "font-inspect:state" || !sender.tab) return;
   const tabId = sender.tab.id;
   browser.action.setBadgeText({ tabId, text: msg.active ? "ON" : "" });

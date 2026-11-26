@@ -18,7 +18,7 @@ Firefox extension to inspect the font of any text with a click.
 
 ## Display modes
 
-The panel has two views. Pick the default one in the add-on options (`about:addons` → Font Inspect → Options), or switch at any time with the ⊟ / ⊞ button in the panel header. The choice is saved.
+The panel has two views. Pick the default one in the add-on settings (⚙ button in the panel header, or `about:addons` → Font Inspect → Options), or switch at any time with the ⊟ / ⊞ button in the panel header. The choice is saved.
 
 - **Full** (default): text preview, every value with its conversions, the full `font-family` stack and where the color is defined.
 - **Compact**: the smallest possible panel, with one line per property, the first font only (`+N` for the others) and the color as hex. Details show on hover, and copying still gives the full value.

@@ -50,6 +50,10 @@
     "message": "Full view",
     "description": "Tooltip of the panel button that switches to the full view."
   },
+  "openSettings": {
+    "message": "Settings",
+    "description": "Tooltip of the panel button that opens the add-on options."
+  },
   "optionDisplayMode": {
     "message": "Panel display",
     "description": "Options page: title of the display mode setting."
@@ -87,7 +91,7 @@
     "description": "Options page: checkbox for the large text preview at the top of the full panel."
   },
   "noRowsSelected": {
-    "message": "No rows selected. Choose them in the add-on options.",
+    "message": "No rows selected. Choose them in the settings (⚙).",
     "description": "Panel message when the user unchecked every row in the options."
   },
   "optionsSaved": {

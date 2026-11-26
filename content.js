@@ -91,19 +91,21 @@
       color: #a39dbf;
       font-size: 16px;
       line-height: 1;
-      padding: 0 2px;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
-    button.close:hover { color: #fff; }
-    .actions { display: flex; align-items: center; gap: 6px; flex: none; }
+    button.close:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+    .actions { display: flex; align-items: center; gap: 2px; flex: none; margin-right: -4px; }
     button.mode {
       all: unset;
       cursor: pointer;
       color: #a39dbf;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1;
-      padding: 0 2px;
+      padding: 3px 4px;
+      border-radius: 4px;
     }
-    button.mode:hover { color: #fff; }
+    button.mode:hover { color: #fff; background: rgba(255, 255, 255, .08); }
 
     /* Mode compact : panneau le plus petit possible */
     .panel.compact { min-width: 0; max-width: 260px; border-radius: 8px; }
@@ -658,6 +660,15 @@
       rerenderPanel();
     });
 
+    // Les content scripts ne peuvent pas ouvrir la page d'options : on passe par le background.
+    const settingsBtn = document.createElement("button");
+    settingsBtn.className = "mode";
+    settingsBtn.textContent = "⚙";
+    settingsBtn.title = t("openSettings");
+    settingsBtn.addEventListener("click", () => {
+      browser.runtime.sendMessage({ type: "font-inspect:open-options" }).catch(() => {});
+    });
+
     const close = document.createElement("button");
     close.className = "close";
     close.textContent = "×";
@@ -669,7 +680,7 @@
 
     const actions = document.createElement("span");
     actions.className = "actions";
-    actions.append(mode, close);
+    actions.append(settingsBtn, mode, close);
     header.append(tag, actions);
     panel.append(header);
 

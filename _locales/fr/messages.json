@@ -38,6 +38,9 @@
   "switchToFull": {
     "message": "Vue complète"
   },
+  "openSettings": {
+    "message": "Paramètres"
+  },
   "optionDisplayMode": {
     "message": "Affichage du panneau"
   },
@@ -66,7 +69,7 @@
     "message": "Aperçu du texte (vue complète uniquement)"
   },
   "noRowsSelected": {
-    "message": "Aucune ligne sélectionnée. Choisissez-les dans les options de l'extension."
+    "message": "Aucune ligne sélectionnée. Choisissez-les dans les paramètres (⚙)."
   },
   "optionsSaved": {
     "message": "Enregistré"
