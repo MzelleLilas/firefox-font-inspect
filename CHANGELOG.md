@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Compact display mode: one line per property, first font only and hex color, with details on hover. Copying still gives the full value.
+- Options page to choose the default display mode (full or compact).
+- Button in the panel header to switch between the full and compact views. The choice is saved.
+
 ## [0.2.0] - 2026-11-20
 
 ### Added

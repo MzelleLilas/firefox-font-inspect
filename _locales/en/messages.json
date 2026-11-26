@@ -42,6 +42,42 @@
     "message": "browser default value",
     "description": "No CSS rule sets the color."
   },
+  "switchToCompact": {
+    "message": "Compact view",
+    "description": "Tooltip of the panel button that switches to the compact view."
+  },
+  "switchToFull": {
+    "message": "Full view",
+    "description": "Tooltip of the panel button that switches to the full view."
+  },
+  "optionDisplayMode": {
+    "message": "Panel display",
+    "description": "Options page: title of the display mode setting."
+  },
+  "modeFull": {
+    "message": "Full",
+    "description": "Options page: full display mode."
+  },
+  "modeFullDesc": {
+    "message": "Text preview, every value with its conversions (rem, em, ratio), the full font-family stack, and where the color is defined.",
+    "description": "Options page: description of the full display mode."
+  },
+  "modeCompact": {
+    "message": "Compact",
+    "description": "Options page: compact display mode."
+  },
+  "modeCompactDesc": {
+    "message": "Smallest possible panel: one line per property, first font only and hex color. Details show on hover; copying still gives the full value.",
+    "description": "Options page: description of the compact display mode."
+  },
+  "optionsToggleHint": {
+    "message": "You can also switch view at any time with the ⊟ / ⊞ button in the panel header.",
+    "description": "Options page: hint about the toggle button in the panel."
+  },
+  "optionsSaved": {
+    "message": "Saved",
+    "description": "Options page: confirmation shown after a setting is saved."
+  },
   "colorSourceBlocked": {
     "message": "computed value (external stylesheets not readable)",
     "description": "The declaring rule could not be found because some cross-origin stylesheets cannot be read."

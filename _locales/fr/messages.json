@@ -32,6 +32,33 @@
   "colorSourceDefault": {
     "message": "valeur par défaut du navigateur"
   },
+  "switchToCompact": {
+    "message": "Vue compacte"
+  },
+  "switchToFull": {
+    "message": "Vue complète"
+  },
+  "optionDisplayMode": {
+    "message": "Affichage du panneau"
+  },
+  "modeFull": {
+    "message": "Complet"
+  },
+  "modeFullDesc": {
+    "message": "Aperçu du texte, toutes les valeurs avec leurs conversions (rem, em, ratio), la liste complète des polices et l'origine de la couleur."
+  },
+  "modeCompact": {
+    "message": "Compact"
+  },
+  "modeCompactDesc": {
+    "message": "Panneau le plus petit possible : une ligne par propriété, première police uniquement et couleur en hexa. Le détail s'affiche au survol, et la copie donne toujours la valeur complète."
+  },
+  "optionsToggleHint": {
+    "message": "Vous pouvez aussi changer de vue à tout moment avec le bouton ⊟ / ⊞ en haut du panneau."
+  },
+  "optionsSaved": {
+    "message": "Enregistré"
+  },
   "colorSourceBlocked": {
     "message": "valeur calculée (feuilles de style externes non lisibles)"
   }

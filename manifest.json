@@ -12,9 +12,12 @@
     "default_title": "__MSG_actionTitle__",
     "default_icon": "icons/icon.svg"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "background": {
     "scripts": ["background.js"]
+  },
+  "options_ui": {
+    "page": "options/options.html"
   },
   "commands": {
     "_execute_action": {

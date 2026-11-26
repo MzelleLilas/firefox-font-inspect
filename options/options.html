@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Font Inspect</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <fieldset>
+      <legend data-i18n="optionDisplayMode"></legend>
+
+      <label class="choice">
+        <input type="radio" name="displayMode" value="full">
+        <span>
+          <strong data-i18n="modeFull"></strong>
+          <small data-i18n="modeFullDesc"></small>
+        </span>
+      </label>
+
+      <label class="choice">
+        <input type="radio" name="displayMode" value="compact">
+        <span>
+          <strong data-i18n="modeCompact"></strong>
+          <small data-i18n="modeCompactDesc"></small>
+        </span>
+      </label>
+    </fieldset>
+
+    <p class="hint" data-i18n="optionsToggleHint"></p>
+    <p class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

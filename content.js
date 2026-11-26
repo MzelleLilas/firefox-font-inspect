@@ -7,6 +7,24 @@
 
   const t = (key, ...subs) => browser.i18n.getMessage(key, subs);
 
+  // ---------- Préférences ----------
+
+  const DEFAULT_SETTINGS = { displayMode: "full" }; // "full" | "compact"
+  let settings = { ...DEFAULT_SETTINGS };
+
+  browser.storage.sync
+    .get(DEFAULT_SETTINGS)
+    .then((stored) => { settings = { ...DEFAULT_SETTINGS, ...stored }; })
+    .catch(() => {});
+
+  browser.storage.onChanged.addListener((changes, area) => {
+    if (area !== "sync" || !changes.displayMode) return;
+    settings.displayMode = changes.displayMode.newValue || DEFAULT_SETTINGS.displayMode;
+    rerenderPanel();
+  });
+
+  const isCompact = () => settings.displayMode === "compact";
+
   const WEIGHT_NAMES = {
     100: "Thin",
     200: "Extra Light",
@@ -53,6 +71,23 @@
       padding: 0 2px;
     }
     button.close:hover { color: #fff; }
+    .actions { display: flex; align-items: center; gap: 6px; flex: none; }
+    button.mode {
+      all: unset;
+      cursor: pointer;
+      color: #a39dbf;
+      font-size: 13px;
+      line-height: 1;
+      padding: 0 2px;
+    }
+    button.mode:hover { color: #fff; }
+
+    /* Mode compact : panneau le plus petit possible */
+    .panel.compact { min-width: 0; max-width: 260px; border-radius: 8px; }
+    .panel.compact header { padding: 4px 8px; }
+    .panel.compact dl { gap: 2px 10px; padding: 6px 8px; }
+    .panel.compact dd { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .panel.compact .swatch { width: 10px; height: 10px; margin-right: 4px; vertical-align: -1px; }
     .preview {
       padding: 10px;
       font-size: 22px;
@@ -489,11 +524,13 @@
     document.documentElement.appendChild(host);
   }
 
-  function row(label, value, sub, { swatch, note } = {}) {
+  // `copy` : valeur copiée si différente de la valeur affichée.
+  // `title` : détail affiché au survol (mode compact).
+  function row(label, value, sub, { swatch, note, copy = value, title } = {}) {
     const dt = document.createElement("dt");
     dt.textContent = label;
     const dd = document.createElement("dd");
-    dd.title = t("copyHint");
+    dd.title = title ? `${title}\n\n${t("copyHint")}` : t("copyHint");
     if (swatch) {
       const chip = document.createElement("span");
       chip.className = "swatch";
@@ -515,7 +552,7 @@
     }
     dd.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(value);
+        await navigator.clipboard.writeText(copy);
         dd.classList.add("copied");
         setTimeout(() => dd.classList.remove("copied"), 700);
       } catch {
@@ -525,63 +562,135 @@
     return [dt, dd];
   }
 
-  function showPanel(el, x, y) {
-    ensurePanelHost();
-    shadow.querySelector(".panel")?.remove();
-
-    const info = getFontInfo(el);
-    const panel = document.createElement("div");
-    panel.className = "panel";
-
-    const header = document.createElement("header");
-    const tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = describe(el);
-    const close = document.createElement("button");
-    close.className = "close";
-    close.textContent = "×";
-    close.title = t("close");
-    close.addEventListener("click", () => panel.remove());
-    header.append(tag, close);
-
-    const preview = document.createElement("div");
-    preview.className = "preview";
-    preview.textContent = sampleText(el);
-    Object.assign(preview.style, {
-      fontFamily: info.fontFamily,
-      fontWeight: info.fontWeight,
-      fontStyle: info.fontStyle,
-      letterSpacing: info.letterSpacing,
-    });
-
-    const dl = document.createElement("dl");
-    dl.append(
+  // Lignes du mode complet : toutes les infos, valeurs secondaires et origine de la couleur.
+  function fullRows(info) {
+    const rows = [
       ...row("font-family", info.fontFamily),
       ...row("font-size", info.fontSize, info.fontSizeSub),
       ...row("font-weight", info.fontWeight, info.fontWeightSub),
       ...row("line-height", info.lineHeight, info.lineHeightSub),
       ...row("letter-spacing", info.letterSpacing, info.letterSpacingSub),
       ...row("color", info.color.authored, null, { swatch: info.color.swatch, note: info.color.source }),
-    );
-    if (info.color.resolved) dl.append(...row("→ var", info.color.resolved));
-    if (info.color.computed) dl.append(...row(t("computedLabel"), info.color.computed));
-    dl.append(...row("hex", info.color.hex, null, { swatch: info.color.swatch }));
+    ];
+    if (info.color.resolved) rows.push(...row("→ var", info.color.resolved));
+    if (info.color.computed) rows.push(...row(t("computedLabel"), info.color.computed));
+    rows.push(...row("hex", info.color.hex, null, { swatch: info.color.swatch }));
+    return rows;
+  }
 
-    const footer = document.createElement("footer");
-    footer.textContent = t("footerHint");
+  // Lignes du mode compact : une ligne par propriété, le détail passe au survol.
+  function compactRows(info) {
+    const families = splitTopLevel(info.fontFamily).map((f) => f.replace(/^["']|["']$/g, ""));
+    const more = families.length > 1 ? `+${families.length - 1}` : null;
+    const colorDetail = [info.color.authored, info.color.resolved, info.color.source]
+      .filter(Boolean)
+      .join("\n");
+    return [
+      ...row("family", families[0] || info.fontFamily, more, {
+        copy: info.fontFamily,
+        title: info.fontFamily,
+      }),
+      ...row("size", info.fontSize, null, { title: info.fontSizeSub }),
+      ...row("weight", info.fontWeight, info.fontWeightSub),
+      ...row("line", info.lineHeight, null, { title: info.lineHeightSub }),
+      ...row("spacing", info.letterSpacing, null, { title: info.letterSpacingSub }),
+      ...row("color", info.color.hex, null, { swatch: info.color.swatch, title: colorDetail }),
+    ];
+  }
 
-    panel.append(header, preview, dl, footer);
+  let current = null; // { el, left, top } du panneau affiché
+
+  function showPanel(el, x, y, keepPosition = false) {
+    ensurePanelHost();
+    const previous = shadow.querySelector(".panel");
+    const prevRect = previous?.getBoundingClientRect();
+    previous?.remove();
+
+    const compact = isCompact();
+    const info = getFontInfo(el);
+    const panel = document.createElement("div");
+    panel.className = compact ? "panel compact" : "panel";
+
+    const header = document.createElement("header");
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = describe(el);
+
+    const mode = document.createElement("button");
+    mode.className = "mode";
+    mode.textContent = compact ? "⊞" : "⊟";
+    mode.title = compact ? t("switchToFull") : t("switchToCompact");
+    mode.addEventListener("click", () => {
+      settings.displayMode = compact ? "full" : "compact";
+      browser.storage.sync.set({ displayMode: settings.displayMode }).catch(() => {});
+      rerenderPanel();
+    });
+
+    const close = document.createElement("button");
+    close.className = "close";
+    close.textContent = "×";
+    close.title = t("close");
+    close.addEventListener("click", () => {
+      panel.remove();
+      current = null;
+    });
+
+    const actions = document.createElement("span");
+    actions.className = "actions";
+    actions.append(mode, close);
+    header.append(tag, actions);
+    panel.append(header);
+
+    if (!compact) {
+      const preview = document.createElement("div");
+      preview.className = "preview";
+      preview.textContent = sampleText(el);
+      Object.assign(preview.style, {
+        fontFamily: info.fontFamily,
+        fontWeight: info.fontWeight,
+        fontStyle: info.fontStyle,
+        letterSpacing: info.letterSpacing,
+      });
+      panel.append(preview);
+    }
+
+    const dl = document.createElement("dl");
+    dl.append(...(compact ? compactRows(info) : fullRows(info)));
+    panel.append(dl);
+
+    if (!compact) {
+      const footer = document.createElement("footer");
+      footer.textContent = t("footerHint");
+      panel.append(footer);
+    }
+
     shadow.appendChild(panel);
 
-    // Positionnement près du clic, en restant dans la fenêtre.
+    // Positionnement : près du clic, ou au même endroit lors d'un changement de mode.
     const margin = 12;
     const { width, height } = panel.getBoundingClientRect();
-    let left = x + margin;
-    let top = y + margin;
-    if (left + width > innerWidth - margin) left = Math.max(margin, x - width - margin);
-    if (top + height > innerHeight - margin) top = Math.max(margin, y - height - margin);
+    let left;
+    let top;
+    if (keepPosition && prevRect) {
+      left = Math.min(prevRect.left, innerWidth - width - margin);
+      top = Math.min(prevRect.top, innerHeight - height - margin);
+    } else {
+      left = x + margin;
+      top = y + margin;
+      if (left + width > innerWidth - margin) left = x - width - margin;
+      if (top + height > innerHeight - margin) top = y - height - margin;
+    }
+    left = Math.max(margin, left);
+    top = Math.max(margin, top);
     panel.style.left = `${left}px`;
     panel.style.top = `${top}px`;
+    current = { el };
+  }
+
+  // Réaffiche le panneau ouvert (changement de mode), sans le déplacer.
+  function rerenderPanel() {
+    if (!active || !current || !current.el.isConnected) return;
+    showPanel(current.el, 0, 0, true);
   }
 
   // ---------- Événements ----------
@@ -644,7 +753,7 @@
       document.documentElement.style.cursor = "";
       highlight?.remove();
       host?.remove();
-      highlight = host = shadow = hovered = null;
+      highlight = host = shadow = hovered = current = null;
     }
 
     browser.runtime.sendMessage({ type: "font-inspect:state", active }).catch(() => {});
