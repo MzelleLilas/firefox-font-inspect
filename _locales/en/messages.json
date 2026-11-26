@@ -74,6 +74,22 @@
     "message": "You can also switch view at any time with the ⊟ / ⊞ button in the panel header.",
     "description": "Options page: hint about the toggle button in the panel."
   },
+  "optionRowsTitle": {
+    "message": "Configuration — rows to display",
+    "description": "Options page: title of the section where the user picks which rows the panel shows."
+  },
+  "optionRowsDesc": {
+    "message": "Applies to both views. Unchecking color also hides the var(), computed and hex rows.",
+    "description": "Options page: explanation of the rows section."
+  },
+  "rowPreview": {
+    "message": "Text preview (full view only)",
+    "description": "Options page: checkbox for the large text preview at the top of the full panel."
+  },
+  "noRowsSelected": {
+    "message": "No rows selected. Choose them in the add-on options.",
+    "description": "Panel message when the user unchecked every row in the options."
+  },
   "optionsSaved": {
     "message": "Saved",
     "description": "Options page: confirmation shown after a setting is saved."

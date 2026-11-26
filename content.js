@@ -9,21 +9,44 @@
 
   // ---------- Préférences ----------
 
-  const DEFAULT_SETTINGS = { displayMode: "full" }; // "full" | "compact"
-  let settings = { ...DEFAULT_SETTINGS };
+  // Garder synchronisé avec options/options.js.
+  const DEFAULT_SETTINGS = {
+    displayMode: "full", // "full" | "compact"
+    rows: {
+      preview: true, // vue complète uniquement
+      fontFamily: true,
+      fontSize: true,
+      fontWeight: true,
+      lineHeight: true,
+      letterSpacing: true,
+      color: true,
+    },
+  };
+
+  const mergeSettings = (stored) => ({
+    ...DEFAULT_SETTINGS,
+    ...stored,
+    rows: { ...DEFAULT_SETTINGS.rows, ...stored?.rows },
+  });
+
+  let settings = mergeSettings();
 
   browser.storage.sync
     .get(DEFAULT_SETTINGS)
-    .then((stored) => { settings = { ...DEFAULT_SETTINGS, ...stored }; })
+    .then((stored) => { settings = mergeSettings(stored); })
     .catch(() => {});
 
   browser.storage.onChanged.addListener((changes, area) => {
-    if (area !== "sync" || !changes.displayMode) return;
-    settings.displayMode = changes.displayMode.newValue || DEFAULT_SETTINGS.displayMode;
+    if (area !== "sync" || (!changes.displayMode && !changes.rows)) return;
+    settings = mergeSettings({
+      displayMode: changes.displayMode ? changes.displayMode.newValue : settings.displayMode,
+      rows: changes.rows ? changes.rows.newValue : settings.rows,
+    });
     rerenderPanel();
   });
 
   const isCompact = () => settings.displayMode === "compact";
+  const shows = (key) => settings.rows[key] !== false;
 
   const WEIGHT_NAMES = {
     100: "Thin",
@@ -124,6 +147,11 @@
       margin-top: 2px;
       color: #6f6990;
       font-size: 11px;
+    }
+    .empty {
+      margin: 0;
+      padding: 10px;
+      color: #8f88ad;
     }
     footer {
       padding: 6px 10px;
@@ -563,19 +591,23 @@
   }
 
   // Lignes du mode complet : toutes les infos, valeurs secondaires et origine de la couleur.
+  // Chaque ligne n'est construite que si elle est activée dans les options.
+  const visible = (entries) => entries.filter(([key]) => shows(key)).flatMap(([, build]) => build());
+
   function fullRows(info) {
-    const rows = [
-      ...row("font-family", info.fontFamily),
-      ...row("font-size", info.fontSize, info.fontSizeSub),
-      ...row("font-weight", info.fontWeight, info.fontWeightSub),
-      ...row("line-height", info.lineHeight, info.lineHeightSub),
-      ...row("letter-spacing", info.letterSpacing, info.letterSpacingSub),
-      ...row("color", info.color.authored, null, { swatch: info.color.swatch, note: info.color.source }),
-    ];
-    if (info.color.resolved) rows.push(...row("→ var", info.color.resolved));
-    if (info.color.computed) rows.push(...row(t("computedLabel"), info.color.computed));
-    rows.push(...row("hex", info.color.hex, null, { swatch: info.color.swatch }));
-    return rows;
+    return visible([
+      ["fontFamily", () => row("font-family", info.fontFamily)],
+      ["fontSize", () => row("font-size", info.fontSize, info.fontSizeSub)],
+      ["fontWeight", () => row("font-weight", info.fontWeight, info.fontWeightSub)],
+      ["lineHeight", () => row("line-height", info.lineHeight, info.lineHeightSub)],
+      ["letterSpacing", () => row("letter-spacing", info.letterSpacing, info.letterSpacingSub)],
+      ["color", () => [
+        ...row("color", info.color.authored, null, { swatch: info.color.swatch, note: info.color.source }),
+        ...(info.color.resolved ? row("→ var", info.color.resolved) : []),
+        ...(info.color.computed ? row(t("computedLabel"), info.color.computed) : []),
+        ...row("hex", info.color.hex, null, { swatch: info.color.swatch }),
+      ]],
+    ]);
   }
 
   // Lignes du mode compact : une ligne par propriété, le détail passe au survol.
@@ -585,17 +617,17 @@
     const colorDetail = [info.color.authored, info.color.resolved, info.color.source]
       .filter(Boolean)
       .join("\n");
-    return [
-      ...row("family", families[0] || info.fontFamily, more, {
+    return visible([
+      ["fontFamily", () => row("family", families[0] || info.fontFamily, more, {
         copy: info.fontFamily,
         title: info.fontFamily,
-      }),
-      ...row("size", info.fontSize, null, { title: info.fontSizeSub }),
-      ...row("weight", info.fontWeight, info.fontWeightSub),
-      ...row("line", info.lineHeight, info.lineHeightSub),
-      ...row("spacing", info.letterSpacing, null, { title: info.letterSpacingSub }),
-      ...row("color", info.color.hex, null, { swatch: info.color.swatch, title: colorDetail }),
-    ];
+      })],
+      ["fontSize", () => row("size", info.fontSize, null, { title: info.fontSizeSub })],
+      ["fontWeight", () => row("weight", info.fontWeight, info.fontWeightSub)],
+      ["lineHeight", () => row("line", info.lineHeight, info.lineHeightSub)],
+      ["letterSpacing", () => row("spacing", info.letterSpacing, null, { title: info.letterSpacingSub })],
+      ["color", () => row("color", info.color.hex, null, { swatch: info.color.swatch, title: colorDetail })],
+    ]);
   }
 
   let current = null; // { el, left, top } du panneau affiché
@@ -641,7 +673,7 @@
     header.append(tag, actions);
     panel.append(header);
 
-    if (!compact) {
+    if (!compact && shows("preview")) {
       const preview = document.createElement("div");
       preview.className = "preview";
       preview.textContent = sampleText(el);
@@ -656,7 +688,14 @@
 
     const dl = document.createElement("dl");
     dl.append(...(compact ? compactRows(info) : fullRows(info)));
-    panel.append(dl);
+    if (dl.childElementCount) {
+      panel.append(dl);
+    } else {
+      const empty = document.createElement("p");
+      empty.className = "empty";
+      empty.textContent = t("noRowsSelected");
+      panel.append(empty);
+    }
 
     if (!compact) {
       const footer = document.createElement("footer");

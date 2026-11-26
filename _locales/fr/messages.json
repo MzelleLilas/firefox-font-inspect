@@ -56,6 +56,18 @@
   "optionsToggleHint": {
     "message": "Vous pouvez aussi changer de vue à tout moment avec le bouton ⊟ / ⊞ en haut du panneau."
   },
+  "optionRowsTitle": {
+    "message": "Configuration — lignes affichées"
+  },
+  "optionRowsDesc": {
+    "message": "S'applique aux deux vues. Décocher color masque aussi les lignes var(), calculée et hex."
+  },
+  "rowPreview": {
+    "message": "Aperçu du texte (vue complète uniquement)"
+  },
+  "noRowsSelected": {
+    "message": "Aucune ligne sélectionnée. Choisissez-les dans les options de l'extension."
+  },
   "optionsSaved": {
     "message": "Enregistré"
   },

@@ -76,6 +76,38 @@ legend {
   font-size: 13px;
 }
 
+.rows {
+  margin-top: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px 16px;
+}
+
+.rows legend,
+.rows .hint {
+  grid-column: 1 / -1;
+}
+
+.rows .hint {
+  margin: -4px 0 4px;
+}
+
+.check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.check input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+code {
+  font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 .hint {
   margin: 12px 0 0;
   color: var(--muted);
