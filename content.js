@@ -592,7 +592,7 @@
       }),
       ...row("size", info.fontSize, null, { title: info.fontSizeSub }),
       ...row("weight", info.fontWeight, info.fontWeightSub),
-      ...row("line", info.lineHeight, null, { title: info.lineHeightSub }),
+      ...row("line", info.lineHeight, info.lineHeightSub),
       ...row("spacing", info.letterSpacing, null, { title: info.letterSpacingSub }),
       ...row("color", info.color.hex, null, { swatch: info.color.swatch, title: colorDetail }),
     ];
